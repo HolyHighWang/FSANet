@@ -124,3 +124,10 @@ yolov5-6.1/
 *.pt
 *.py~
 *.sh~
+
+# FSANet: local weights (see pretrained/README.md) and run outputs
+pretrained/*
+!pretrained/README.md
+*.safetensors
+work_dirs/
+results/
