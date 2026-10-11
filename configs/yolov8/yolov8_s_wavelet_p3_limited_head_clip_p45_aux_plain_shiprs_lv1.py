@@ -43,7 +43,7 @@ model = dict(
     )
 )
 
-data_root = '/data2/wangzihao233ov/Datasets/ShipRSImageNet_V1/'
+data_root = '/path/to/ShipRSImageNet_V1/'
 metainfo = {
     'classes': ('Other Ship', 'Warship', 'Merchant', 'Dock' ),
 }
@@ -77,7 +77,7 @@ train_cfg = dict(type='EpochBasedTrainLoop', max_epochs=max_epochs, val_interval
 val_cfg = dict(type='ValLoop')
 test_cfg = dict(type='TestLoop')
 
-load_from = '/data2/wangzihao233ov/mmyolo-main/models/yolov8/yolov8_s_syncbn_fast_8xb16-500e_coco_20230117_180101-5aa5f0f1.pth'
+load_from = 'pretrained/yolov8/yolov8_s_syncbn_fast_8xb16-500e_coco_20230117_180101-5aa5f0f1.pth'
 
 
 

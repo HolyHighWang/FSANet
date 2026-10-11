@@ -32,7 +32,7 @@ repository.
 Everything else is unmodified MMYOLO v0.6.0 (upstream commit `8c4d9dc`): all
 official configs, `tools/`, `projects/`, `docs/`, `demo/`, `tests/` and
 `requirements/` are kept as upstream, so the change set can be reviewed with
-`git diff 8c4d9dc`. Weight files and run outputs are not included. The upstream
+`git diff HEAD~1`. Weight files and run outputs are not included. The upstream
 README is preserved as [`README_MMYOLO.md`](README_MMYOLO.md).
 
 ## Repository layout
@@ -86,9 +86,9 @@ All benchmarks are trained in **COCO detection format** with `img_scale` of
 
 | Dataset | `data_root` in the config | Annotations | Classes |
 | --- | --- | --- | --- |
-| DIOR | `/data2/wangzihao233ov/Datasets/DIOR/` | `train/annotations/DIOR_train.json`, `val/annotations/DIOR_val.json` | 20 |
-| AI-TODv1 | `/data2/wangzihao233ov/Datasets/AI-DOT/` | `annotations/aitod_train_v1.json`, `annotations/aitod_val_v1.json` | 8 |
-| ShipRSImageNet | `/data2/wangzihao233ov/Datasets/ShipRSImageNet_V1/` | `COCO_Format/ShipRSImageNet_bbox_{train,val}_level_{0..3}.json` | 2 / 4 / 25 / 50 |
+| DIOR | `/path/to/DIOR/` | `train/annotations/DIOR_train.json`, `val/annotations/DIOR_val.json` | 20 |
+| AI-TODv1 | `/path/to/AI-TOD/` | `annotations/aitod_train_v1.json`, `annotations/aitod_val_v1.json` | 8 |
+| ShipRSImageNet | `/path/to/ShipRSImageNet_V1/` | `COCO_Format/ShipRSImageNet_bbox_{train,val}_level_{0..3}.json` | 2 / 4 / 25 / 50 |
 
 Expected directory layout (DIOR shown; the others follow the same pattern):
 
@@ -107,17 +107,20 @@ of classes.
 
 ## Paths you have to change
 
-The released configs keep the absolute paths of the training server they were
-produced on:
+The configs ship with placeholders instead of the paths used during training, so no
+machine-specific information is published:
 
-* `data_root` — root of the dataset (see the table above);
-* `load_from` —
-  `/data2/wangzihao233ov/mmyolo-main/models/yolov8/yolov8_s_syncbn_fast_8xb16-500e_coco_20230117_180101-5aa5f0f1.pth`
-  → your local YOLOv8s COCO checkpoint;
-* `clip_pretrained` — `pretrained/open_clip/open_clip_model.safetensors` (already
-  relative, so it works once the weights are in place).
+* `data_root` — `/path/to/<dataset>/`, one placeholder per dataset (see the table
+  above); set it to the root of your own copy of the dataset.
+* `load_from` — `pretrained/yolov8/yolov8_s_syncbn_fast_8xb16-500e_coco_20230117_180101-5aa5f0f1.pth`,
+  relative to the repository root just like `clip_pretrained`; put the YOLOv8s COCO
+  checkpoint there (see [`pretrained/README.md`](pretrained/README.md)).
+* `clip_pretrained` — `pretrained/open_clip/open_clip_model.safetensors`, also
+  relative to the repository root.
 
-They can also be overridden on the command line instead of editing the files:
+Run the training commands from the repository root so the relative weight paths
+resolve. These values can also be overridden on the command line instead of editing
+the files:
 
 ```bash
 python tools/train.py configs/yolov8/yolov8_s_wavelet_p3_limited_head_clip_p45_aux_plain_dior.py \
@@ -209,5 +212,9 @@ FSANet 是一个面向小目标检测的代码工程，基于 MMYOLO v0.6.0 与 
    分支只在训练时使用，推理结构与原版 YOLOv8s 一致。
 
 本仓库相对官方 MMYOLO 只做了上表列出的改动，其余保持 v0.6.0 原样，可用
-`git diff 8c4d9dc` 核对；权重文件与训练结果均未包含。使用前请按上文修改配置中的
-`data_root` 与 `load_from`，并按 `pretrained/README.md` 自行下载权重。
+`git diff HEAD~1` 核对；权重文件与训练结果均未包含。
+
+配置中的路径已替换为占位符，不含任何训练环境信息：`data_root` 为
+`/path/to/<数据集>/`，请改为你自己的数据集根目录；`load_from` 与 `clip_pretrained`
+都是相对仓库根目录的路径，按 `pretrained/README.md` 下载权重放到对应位置，并在仓库
+根目录下执行训练命令。
